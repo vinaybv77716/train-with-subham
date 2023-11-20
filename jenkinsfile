@@ -10,7 +10,7 @@ pipeline{
         stage("tar_file"){
             steps{
                 echo "tar_file done"
-                sh 'tar -czvf /var/lib/jenkins/workspace/project/dox.tar.gz *'
+                sh 'tar -czvf dox.tar.gz *'
                 sh 'pwd'
                 sh 'ls'
             }
