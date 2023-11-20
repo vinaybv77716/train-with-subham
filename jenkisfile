@@ -1,0 +1,41 @@
+pipeline{
+    agent any
+    stages{
+        stage("clone"){
+            steps{
+                echo "cloning done"
+                git url: "https://github.com/vinaybv77716/train-with-subham.git" , branch: "main"
+            }
+        }
+        stage("tar_file"){
+            steps{
+                echo "tar_file done"
+                sh 'tar -czvf /var/lib/jenkins/workspace/project/dox.tar.gz *'
+                sh 'pwd'
+                sh 'ls'
+            }
+        }
+        stage("build_docker_image"){
+            steps{
+                echo "build_docker_image done"
+                sh 'docker build -t example .'
+            }
+        }
+        stage("push_to_docker_hub"){
+            steps{
+                echo "push_to_docker_hub"
+                withCredentials([usernamePassword(credentialsId:"dockerhub",passwordVariable:"dockerhubPass",usernameVariable:"dockerhubuser")]){
+                sh "docker tag example ${env.dockerhubuser}/example:latest"    
+                 sh "docker login -u ${env.dockerhubuser} -p${env.dockerhubPass}"   
+                 sh "docker push ${env.dockerhubuser}/example:latest"
+                }
+            }
+        }
+         stage("deploy_the_container"){
+            steps{
+                echo "deploy_the_container done"
+                sh 'docker-compose'
+            }
+        }
+    }
+}
