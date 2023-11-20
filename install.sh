@@ -38,3 +38,8 @@ echo \
 apt install docker.io -y
 
 sudo apt-get install docker-compose -y
+
+
+#grant permesions
+sudo usermod -aG docker jenkins
+sudo usermod -aG docker ubuntu
